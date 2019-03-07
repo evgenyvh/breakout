@@ -20,7 +20,7 @@
     var dx = 2;
     var dy = -2;
     var paddleHeight = 10;
-    var paddleWidth = 75;
+    var paddleWidth = 85;
     var paddleX = (canvas.width-paddleWidth)/2;
     var rightPressed = false;
     var leftPressed = false;
@@ -30,7 +30,7 @@
     var brickHeight = 20;
     var brickPadding = 1;
     var brickOffsetTop = 35 ;
-    var brickOffsetLeft = 100;
+    var brickOffsetLeft = 90;
     var score = 0;
 
     var bricks = [];
@@ -76,7 +76,7 @@
 
     function drawBall() {
         ctx.beginPath();
-        ctx.arc(x, y, ballRadius, 0, Math.PI*2);
+        ctx.arc(x, y, ballRadius, -5, Math.PI*2);
         ctx.fillStyle = "#76C2AF";
         ctx.fill();
         ctx.closePath();
