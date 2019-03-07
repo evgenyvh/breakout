@@ -41,29 +41,23 @@
         }
     }
 
-    for(var c=0; c<brickColumnCount; c++) {
-        bricks[c] = [];
-        for(var r=0; r<brickRowCount; r++) {
-            bricks[c][r] = { x: 0, y: 0, status: 1 };
-        }
-    }
-
     document.addEventListener("keydown", keyDownHandler, false);
     document.addEventListener("keyup", keyUpHandler, false);
 
     function keyDownHandler(e) {
-        if(e.keyCode == 39) {
+        if(e.key == "Right" || e.key == "ArrowRight") {
             rightPressed = true;
         }
-        else if(e.keyCode == 37) {
+        else if(e.key == "Left" || e.key == "ArrowLeft") {
             leftPressed = true;
         }
     }
+
     function keyUpHandler(e) {
-        if(e.keyCode == 39) {
+        if(e.key == "Right" || e.key == "ArrowRight") {
             rightPressed = false;
         }
-        else if(e.keyCode == 37) {
+        else if(e.key == "Left" || e.key == "ArrowLeft") {
             leftPressed = false;
         }
     }
@@ -89,7 +83,7 @@
 
     function drawBall() {
         ctx.beginPath();
-        ctx.arc(x, y, ballRadius, -5, Math.PI*2);
+        ctx.arc(x, y, ballRadius, 0, Math.PI*2);
         ctx.fillStyle = "#76C2AF";
         ctx.fill();
         ctx.closePath();
@@ -129,6 +123,7 @@
         drawBall();
         drawPaddle();
         collisionDetection();
+        drawScore();
 
         if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
             dx = -dx;
@@ -143,6 +138,7 @@
             else {
                 alert("GAME OVER");
                 document.location.reload();
+                clearInterval(interval);
             }
         }
 
@@ -157,7 +153,7 @@
         y += dy;
     }
 
-    setInterval(draw, 11);
+    var interval = setInterval(draw, 10);
 
 </script>
 
