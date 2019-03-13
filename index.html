@@ -26,29 +26,26 @@
     var paddleX = (canvas.width-paddleWidth)/2;
     var rightPressed = false;
     var leftPressed = false;
-    var brickRowCount = 7;
-    var brickColumnCount = 7;
+    var brickRowCount = 6;
+    var brickColumnCount = 6;
     var brickWidth = 60;
     var brickHeight = 20;
-    var brickPadding = 1;
-    var brickOffsetTop = 35 ;
-    var brickOffsetLeft = 90;
+    var brickPadding = 7;
+    var brickOffsetTop = 35;
+    var brickOffsetLeft = 150;
     var score = 0;
     var playing = false;
     var startButton;
     var bricks = [];
-
     for(var c=0; c<brickColumnCount; c++) {
         bricks[c] = [];
         for(var r=0; r<brickRowCount; r++) {
             bricks[c][r] = { x: 0, y: 0, status: 1 };
         }
     }
-
     document.addEventListener("keydown", keyDownHandler, false);
     document.addEventListener("keyup", keyUpHandler, false);
     document.addEventListener("mousemove", mouseMoveHandler, false);
-
     function keyDownHandler(e) {
         if(e.key == "Right" || e.key == "ArrowRight") {
             rightPressed = true;
@@ -57,7 +54,6 @@
             leftPressed = true;
         }
     }
-
     function keyUpHandler(e) {
         if(e.key == "Right" || e.key == "ArrowRight") {
             rightPressed = false;
@@ -91,7 +87,6 @@
             }
         }
     }
-
     function drawBall() {
         ctx.beginPath();
         ctx.arc(x, y, ballRadius, 0, Math.PI*2);
@@ -124,7 +119,7 @@
         }
     }
     function drawScore() {
-        ctx.font = "16px Arial";
+        ctx.font = "19px Arial";
         ctx.fillStyle = "#8ddd76";
         ctx.fillText("Score: "+score, 8, 20);
     }
@@ -135,7 +130,6 @@
         drawPaddle();
         collisionDetection();
         drawScore();
-
         if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
             dx = -dx;
         }
@@ -152,18 +146,15 @@
                 clearInterval(interval);
             }
         }
-
         if(rightPressed && paddleX < canvas.width-paddleWidth) {
             paddleX += 3;
         }
         else if(leftPressed && paddleX > 3) {
             paddleX -= 3;
         }
-
         x += dx;
         y += dy;
     }
-
     var interval = setInterval(draw, 10);
     game.load.spritesheet('button', 'img/button.png', 120, 40);
 </script>
