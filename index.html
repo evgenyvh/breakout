@@ -37,6 +37,8 @@
     var playing = false;
     var startButton;
     var bricks = [];
+    var lives = 3;
+
     for(var c=0; c<brickColumnCount; c++) {
         bricks[c] = [];
         for(var r=0; r<brickRowCount; r++) {
@@ -157,6 +159,13 @@
     }
     var interval = setInterval(draw, 10);
     game.load.spritesheet('button', 'img/button.png', 120, 40);
+
+    function drawlives() {
+        ctx.font = "16px Arial";
+        ctx.fillStyle = "#0095DD";
+        ctx.fillText("lives: "+lives, canvas.width-65, 20);
+
+    }
 </script>
 
 </body>
