@@ -18,21 +18,21 @@
     var ctx = canvas.getContext("2d");
     var ballRadius = 10;
     var x = canvas.width/2;
-    var y = canvas.height-50;
-    var dx = 2;
-    var dy = -2;
+    var y = canvas.height-30;
+    var dx = -2;
+    var dy = 2;
     var paddleHeight = 10;
     var paddleWidth = 85;
     var paddleX = (canvas.width-paddleWidth)/2;
     var rightPressed = false;
     var leftPressed = false;
-    var brickRowCount = 6;
-    var brickColumnCount = 6;
+    var brickRowCount = 8;
+    var brickColumnCount = 8;
     var brickWidth = 60;
     var brickHeight = 20;
-    var brickPadding = 7;
+    var brickPadding = 5;
     var brickOffsetTop = 35;
-    var brickOffsetLeft = 150;
+    var brickOffsetLeft = 100;
     var score = 0;
     var playing = false;
     var startButton;
@@ -82,7 +82,6 @@
                         if(score == brickRowCount*brickColumnCount) {
                             alert("Level voltooid!");
                             document.location.reload();
-                            clearInterval(interval);
                         }
                     }
                 }
@@ -132,6 +131,7 @@
         drawPaddle();
         collisionDetection();
         drawScore();
+        drawlives();
         if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
             dx = -dx;
         }
@@ -143,9 +143,19 @@
                 dy = -dy;
             }
             else {
-                alert("GAME OVER");
-                document.location.reload();
-                clearInterval(interval);
+               lives--;
+               if (!lives){
+                   alert("GAME OVER")
+                   document.location.reload();
+               }
+               else {
+                   x = canvas.width/2;
+                   y = canvas.height-30;
+                   dx = 2;
+                   dy = -2;
+                   paddleX = (canvas.Width-paddleWidth)/2;
+
+               }
             }
         }
         if(rightPressed && paddleX < canvas.width-paddleWidth) {
@@ -156,16 +166,15 @@
         }
         x += dx;
         y += dy;
+        requestAnimationFrame(draw);
     }
-    var interval = setInterval(draw, 10);
-    game.load.spritesheet('button', 'img/button.png', 120, 40);
-
     function drawlives() {
-        ctx.font = "16px Arial";
-        ctx.fillStyle = "#0095DD";
+        ctx.font = "19px Arial";
+        ctx.fillStyle = "#76C2AF";
         ctx.fillText("lives: "+lives, canvas.width-65, 20);
 
     }
+    draw();
 </script>
 
 </body>
