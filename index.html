@@ -5,7 +5,7 @@
     <title>Breakout</title>
     <link rel="shortcut icon" href="img/header.jpg">
     <style>
-        * { padding: 0; margin: 0; }
+       * { padding: 0; margin: 0; }
         canvas { background: #eee; display: block; margin: 0 auto; }
         <script src="js/phaser.min.js"></script>
     </style>
@@ -17,11 +17,11 @@
 <script>
     var canvas = document.getElementById("myCanvas");
     var ctx = canvas.getContext("2d");
-    var ballRadius = 10;
+    var ballRadius = 8;
     var x = canvas.width/2;
     var y = canvas.height-30;
-    var dx = 2;
-    var dy = -2;
+    var dx = 3;
+    var dy = -3;
     var paddleHeight = 10;
     var paddleWidth = 85;
     var paddleX = (canvas.width-paddleWidth)/2;
@@ -40,7 +40,7 @@
     var bricks = [];
     var lives = 3;
 
-    for(var c=0; c<brickColumnCount; c++) {
+     for(var c=0; c<brickColumnCount; c++) {
         bricks[c] = [];
         for(var r=0; r<brickRowCount; r++) {
             bricks[c][r] = { x: 0, y: 0, status: 1 };
@@ -81,7 +81,7 @@
                         b.status = 0;
                         score++;
                         if(score == brickRowCount*brickColumnCount) {
-                            alert("Level voltooid!");
+                            alert("je hebt gewonnen!");
                             document.location.reload();
                         }
                     }
@@ -152,18 +152,18 @@
                else {
                    x = canvas.width/2;
                    y = canvas.height-30;
-                   dx = 2;
-                   dy = -2;
+                   dx = 3;
+                   dy = -3;
                    paddleX = (canvas.Width-paddleWidth)/2;
 
                }
             }
         }
         if(rightPressed && paddleX < canvas.width-paddleWidth) {
-            paddleX += 3;
+            paddleX += 5;
         }
         else if(leftPressed && paddleX > 3) {
-            paddleX -= 3;
+            paddleX -= 5;
         }
         x += dx;
         y += dy;
