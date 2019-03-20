@@ -5,17 +5,22 @@
     <title>Breakout</title>
     <link rel="shortcut icon" href="img/header.jpg">
     <style>
-       * { padding: 0; margin: 0; }
-        canvas { background: #eee; display: block; margin: 0 auto; }
+        canvas {
+            background: #eee; display: block; margin: 0 auto;
+        }
     .clickme{
         height: 100px;
+    }
+    .myBtn{
+        width: 100px;
     }
     </style>
 <script src="js/phaser.min.js"></script>
 </head>
 <body>
 <canvas id="myCanvas" width="700" height="500"></canvas>
-<input id="clickMe" type="button" value="Start het spel" onclick="draw() ;" />
+<input id="clickMe" type="button" value="Start het spel" onclick="draw() ;" /><br>
+<br>
 <button id="myBtn">Handleiding</button>
 <script>
     document.getElementById("myBtn").addEventListener("click", function() {
@@ -29,18 +34,18 @@
     var y = canvas.height-30;
     var dx = 3;
     var dy = -3;
-    var paddleHeight = 10;
+    var paddleHeight = 7;
     var paddleWidth = 85;
     var paddleX = (canvas.width-paddleWidth)/2;
     var rightPressed = false;
     var leftPressed = false;
-    var brickRowCount = 10;
-    var brickColumnCount = 10;
+    var brickRowCount = 6;
+    var brickColumnCount = 5;
     var brickWidth = 60;
     var brickHeight = 20;
     var brickPadding = 1;
-    var brickOffsetTop = 35;
-    var brickOffsetLeft = 50;
+    var brickOffsetTop = 65;
+    var brickOffsetLeft = 150;
     var score = 0;
     var bricks = [];
     var lives = 3;
@@ -102,7 +107,7 @@
                         b.status = 0;
                         score++;
                         if(score == brickRowCount*brickColumnCount) {
-                            alert("je hebt gewonnen!");
+                            alert("Je hebt gewonnen!");
                             document.location.reload();
                         }
                     }
@@ -145,7 +150,7 @@
     function drawScore() {
         ctx.font = "19px Arial";
         ctx.fillStyle = "#8ddd76";
-        ctx.fillText("Score: "+score, 8, 20);
+        ctx.fillText("Jou score: "+score, 8, 20);
     }
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -197,7 +202,84 @@
         ctx.fillText("Jij hebt nog: "+lives +" levens!", canvas.width -195, 20 );
 
     }
-</script>
+    var record = 100;
 
+
+
+    function getCookie(c_name)
+    {
+        if (document.cookie.length>0)
+        {
+            c_start=document.cookie.indexOf(c_name + "=");
+            if (c_start!=-1)
+            {
+                c_start=c_start + c_name.length+1 ;
+                c_end=document.cookie.indexOf(";",c_start);
+                if (c_end==-1) c_end=document.cookie.length
+                return unescape(document.cookie.substring(c_start,c_end));
+            }
+        }
+        return "";
+    }
+
+
+    function setCookie(c_name,value,expiredays)
+    {
+        var exdate=new Date();
+        exdate.setDate(exdate.getDate()+expiredays);
+        document.cookie=c_name+ "=" +escape(value)+((expiredays==null) ? "" : "; expires="+exdate.toUTCString());
+    }
+
+    function checkCookie()
+    {
+        username=getCookie('username');
+        recordi=getCookie('Score');
+        if (username!=null && username!="")
+        {
+            alert(username+': '+recordi);
+        }
+        else
+        {
+            username=prompt('Please enter your name:',"");
+            if (username!=null && username!="")
+            {
+                setCookie('username',username,365);
+            }
+        }
+    }
+
+
+    function addToTextArea(text) {
+        var el = document.getElementById('myTextarea');
+        el.value = text;
+    }
+
+    function game() {
+        var guess = 0;
+        var numberOfGuesses = 0;
+        var rand_no = Math.random();
+        rand_no = Math.round(rand_no * 10);
+
+        guess = prompt("Insert your guess", "");
+        numberOfGuesses += 1;
+
+        while (guess != rand_no) {
+            if (guess > rand_no) {
+                guess = prompt("too big", "");
+            }
+            if (guess < rand_no) {
+                guess = prompt("too small", "");
+            }
+            numberOfGuesses += 1;
+        }
+        if (numberOfGuesses < record) {
+            record = numberOfGuesses;
+        }
+
+        alert("It took you " + numberOfGuesses + " guesses");
+        addToTextArea("Your high score = " + (record));
+        setCookie('Score',record,365);
+    }
+</script>
 </body>
 </html>
