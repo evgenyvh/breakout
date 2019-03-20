@@ -35,7 +35,7 @@
     </option>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="php_xampp" />
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="87" />
     <option name="y" value="-38" />
     <option name="width" value="1440" />
@@ -90,12 +90,12 @@
       <option name="presentableId" value="Default" />
       <updated>1552485606986</updated>
       <workItem from="1552485608407" duration="2919000" />
-      <workItem from="1552548981520" duration="7129000" />
+      <workItem from="1552548981520" duration="7291000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10048000" />
+    <option name="totallyTimeSpent" value="10210000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
