@@ -5,6 +5,40 @@
     <title>Breakout</title>
     <link rel="shortcut icon" href="img/header.jpg">
     <style>
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%; /* Could be more or less, depending on screen size */
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
         canvas {
             background: #eee; display: block; margin: 0 auto;
         }
@@ -21,11 +55,20 @@
 <canvas id="myCanvas" width="700" height="500"></canvas>
 <input id="clickMe" type="button" value="Start het spel" onclick="draw() ;" /><br>
 <br>
-<button id="myBtn">Handleiding</button>
+<button id="myBtn"> Handleiding </button>
+<br>
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Handleiding</h3>
+        <p>In het spel zijn er verschillende lagen van stenen boven aan het scherm. Een bal gaat heen en weer over het scherm. Wanneer de bal een steen raakt, verdwijnt de steen en kaatst de bal terug. De speler heeft een peddel die hij kan verplaatsen. Als de bal de peddel raakt, kaatst hij terug. Als de bal helemaal onder aan het scherm komt, voorbij de peddel, verliest de speler een leven. Het is dus de bedoeling dat de speler door de peddel te verplaatsen ervoor zorgt dat dit niet gebeurt.</p>
+    </div>
+    <div id="highscoreboard"></div>
+    <div id="higscore"></div>
+</div>
+<div id="highscore"></div>
 <script>
-    document.getElementById("myBtn").addEventListener("click", function() {
-        alert("In het spel zijn er verschillende lagen van stenen boven aan het scherm. Een bal gaat heen en weer over het scherm. Wanneer de bal een steen raakt, verdwijnt de steen en kaatst de bal terug. De speler heeft een peddel die hij kan verplaatsen. Als de bal de peddel raakt, kaatst hij terug. Als de bal helemaal onder aan het scherm komt, voorbij de peddel, verliest de speler een leven. Het is dus de bedoeling dat de speler door de peddel te verplaatsen ervoor zorgt dat dit niet gebeurt.");
-    });
+    var highscore = localStorage.getItem("highscore");
     var mixBut = document.getElementById("mixBut");
     var canvas = document.getElementById("myCanvas");
     var ctx = canvas.getContext("2d");
@@ -50,6 +93,14 @@
     var bricks = [];
     var lives = 3;
 
+    if(highscore !== null){
+        if (score > highscore) {
+            localStorage.setItem("highscore", score);
+        }
+    }
+    else{
+        localStorage.setItem("highscore", score);
+    }
 
      for(var c=0; c<brickColumnCount; c++) {
         bricks[c] = [];
@@ -115,6 +166,7 @@
             }
         }
     }
+
     function drawBall() {
         ctx.beginPath();
         ctx.arc(x, y, ballRadius, 0, Math.PI*2);
@@ -122,6 +174,7 @@
         ctx.fill();
         ctx.closePath();
     }
+
     function drawPaddle() {
         ctx.beginPath();
         ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
@@ -147,11 +200,13 @@
             }
         }
     }
+
     function drawScore() {
         ctx.font = "19px Arial";
         ctx.fillStyle = "#8ddd76";
         ctx.fillText("Jou score: "+score, 8, 20);
     }
+
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawBricks();
@@ -173,7 +228,10 @@
             else {
                lives--;
                if (!lives){
-                    alert("GAME OVER")
+                    alert("GAME OVER");
+                   if (score > highscore) {
+                       localStorage.setItem("highscore", score);
+                   }
                    document.location.reload();
                }
                else {
@@ -202,84 +260,22 @@
         ctx.fillText("Jij hebt nog: "+lives +" levens!", canvas.width -195, 20 );
 
     }
-    var record = 100;
-
-
-
-    function getCookie(c_name)
-    {
-        if (document.cookie.length>0)
-        {
-            c_start=document.cookie.indexOf(c_name + "=");
-            if (c_start!=-1)
-            {
-                c_start=c_start + c_name.length+1 ;
-                c_end=document.cookie.indexOf(";",c_start);
-                if (c_end==-1) c_end=document.cookie.length
-                return unescape(document.cookie.substring(c_start,c_end));
-            }
-        }
-        return "";
+    var modal = document.getElementById('myModal');
+    var btn = document.getElementById("myBtn");
+    var span = document.getElementsByClassName("close")[0];
+    btn.onclick = function() {
+        modal.style.display = "block";
     }
-
-
-    function setCookie(c_name,value,expiredays)
-    {
-        var exdate=new Date();
-        exdate.setDate(exdate.getDate()+expiredays);
-        document.cookie=c_name+ "=" +escape(value)+((expiredays==null) ? "" : "; expires="+exdate.toUTCString());
+    span.onclick = function() {
+        modal.style.display = "none";
     }
-
-    function checkCookie()
-    {
-        username=getCookie('username');
-        recordi=getCookie('Score');
-        if (username!=null && username!="")
-        {
-            alert(username+': '+recordi);
-        }
-        else
-        {
-            username=prompt('Please enter your name:',"");
-            if (username!=null && username!="")
-            {
-                setCookie('username',username,365);
-            }
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
         }
     }
-
-
-    function addToTextArea(text) {
-        var el = document.getElementById('myTextarea');
-        el.value = text;
-    }
-
-    function game() {
-        var guess = 0;
-        var numberOfGuesses = 0;
-        var rand_no = Math.random();
-        rand_no = Math.round(rand_no * 10);
-
-        guess = prompt("Insert your guess", "");
-        numberOfGuesses += 1;
-
-        while (guess != rand_no) {
-            if (guess > rand_no) {
-                guess = prompt("too big", "");
-            }
-            if (guess < rand_no) {
-                guess = prompt("too small", "");
-            }
-            numberOfGuesses += 1;
-        }
-        if (numberOfGuesses < record) {
-            record = numberOfGuesses;
-        }
-
-        alert("It took you " + numberOfGuesses + " guesses");
-        addToTextArea("Your high score = " + (record));
-        setCookie('Score',record,365);
-    }
+    //VOOR DE HIGSCORE
+    document.getElementById('highscoreboard').innerHTML = localStorage.getItem('highscore');
 </script>
 </body>
 </html>
