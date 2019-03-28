@@ -5,25 +5,64 @@
     <title>Breakout</title>
     <link rel="shortcut icon" href="img/header.jpg">
     <style>
+        .button {
+            display: inline-block;
+            border-radius: 4px;
+            background-color: #f4511e;
+            border: none;
+            color: #FFFFFF;
+            text-align: center;
+            font-size: 28px;
+            padding: 20px;
+            width: 200px;
+            transition: all 0.5s;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .button span {
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+            transition: 0.5s;
+        }
+
+        .button span:after {
+            content: '\00bb';
+            position: absolute;
+            opacity: 0;
+            top: 0;
+            right: -20px;
+            transition: 0.5s;
+        }
+
+        .button:hover span {
+            padding-right: 25px;
+        }
+
+        .button:hover span:after {
+            opacity: 1;
+            right: 0;
+        }
         .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
+            display: none;
+            position: fixed;
+            z-index: 1;
             left: 0;
             top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0,0,0); /* Fallback color */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
         }
 
         .modal-content {
             background-color: #fefefe;
-            margin: 15% auto; /* 15% from the top and centered */
+            margin: 15% auto;
             padding: 20px;
             border: 1px solid #888;
-            width: 50%; /* Could be more or less, depending on screen size */
+            width: 50%;
         }
 
         .close {
@@ -42,12 +81,12 @@
         canvas {
             background: #eee; display: block; margin: 0 auto;
         }
-    .clickme{
+        .clickme{
         height: 100px;
-    }
-    .myBtn{
+         }
+         .myBtn{
         width: 100px;
-    }
+         }
     </style>
 <script src="js/phaser.min.js"></script>
 </head>
@@ -63,10 +102,14 @@
         <h3>Handleiding</h3>
         <p>In het spel zijn er verschillende lagen van stenen boven aan het scherm. Een bal gaat heen en weer over het scherm. Wanneer de bal een steen raakt, verdwijnt de steen en kaatst de bal terug. De speler heeft een peddel die hij kan verplaatsen. Als de bal de peddel raakt, kaatst hij terug. Als de bal helemaal onder aan het scherm komt, voorbij de peddel, verliest de speler een leven. Het is dus de bedoeling dat de speler door de peddel te verplaatsen ervoor zorgt dat dit niet gebeurt.</p>
     </div>
-    <div id="highscoreboard"></div>
-    <div id="higscore"></div>
 </div>
-<div id="highscore"></div>
+<div>
+    <h3>Jou higscrore is:</h3> <div id="highscoreboard"></div>
+</div>
+<div>
+<button onclick="localStorage.setItem('highscore',0);document.getElementById('highscoreboard').innerHTML = localStorage.getItem('highscore')">reset</button>
+    <!--<input type="button" id="clearlocal" onmouseover="myFunction()" onclick="alert('click event occured')">-->
+</div>
 <script>
     var highscore = localStorage.getItem("highscore");
     var mixBut = document.getElementById("mixBut");
