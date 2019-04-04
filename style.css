@@ -1,0 +1,141 @@
+#output {
+    position: relative;
+    left: calc(50vw - 200px);
+    font-size: 1.5em;
+    max-width: 600px
+}
+
+#btndeal, #myactions {
+    display: none;
+}
+
+.btn {
+    border-radius: 5px;
+    padding: 8px 20px;
+    color: white;
+    display: inline-block;
+    text-align: center;
+    text-shadow: 1px 1px #000000;
+    font: normal 700 24px/1 "Calibri", sans-serif;
+    margin-bottom: 100px;
+}
+
+#cover {
+    height: 160px;
+    width: 120px;
+    background-color: brown;
+    border-radius: 10px;
+    position: absolute;
+    border: 1px solid black;
+    padding: 3px;
+}
+
+.icard {
+    height: 160px;
+    width: 120px;
+    padding: 3px;
+    border: 1px solid black;
+    background-color: white;
+    border-radius: 10px;
+    position: absolute;
+    left: 100px;
+    display: inline-block;
+    font-family: 'Lato';
+}
+
+.top-card {
+    font-size: 30px;
+    line-height: 20px;
+    left: 2px;
+    top: 2px;
+}
+
+.content-card {
+    text-align: center;
+    font-size: 70px;
+}
+
+.bottom-card {
+    font-size: 30px;
+    line-height: 20px;
+    right: 2px;
+    bottom: 2px;
+    transform: rotate(-180deg);
+    -webkit-transform: rotate(-180deg);
+    -moz-transform: rotate(-180deg);
+    -ms-transform: rotate(-180deg);
+    -o-transform: rotate(-180deg);
+}
+
+.clubs, .spades {
+    color: black;
+}
+
+.hearts, .diams {
+    color: red;
+}
+
+.hearts .suit::after {
+    content: '\2665';
+}
+
+.diams .suit::after {
+    content: '\2666';
+}
+
+.spades .suit::after {
+    content: '\2660';
+}
+
+.clubs .suit::after {
+    content: '\2663';
+}
+
+#dealerHolder, #playerHolder {
+    height: 180px;
+    width: 500px;
+}
+
+#message {
+    height: 90px;
+    font-size: 30px;
+    text-align: center;
+    background-color: #76c2af;
+}
+
+#btnhold {
+    background-color: green;
+}
+
+#btnhit {
+    background-color: red;
+}
+
+#btndouble {
+    background-color: blue;
+}
+
+#btndeal {
+    background-color: purple;
+    font-size: 50px;
+}
+
+#maxbet {
+    background-color: red;
+    font-size: 12px;
+}
+
+#btnstart {
+    background-color: black;
+}
+
+#mybet {
+    font-size: 30px;
+}
+
+.total {
+    position: absolute;
+    background: #333;
+    font-size: 30px;
+
+}
