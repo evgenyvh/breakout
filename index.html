@@ -5,15 +5,88 @@
     <title>Breakout</title>
     <link rel="shortcut icon" href="img/header.jpg">
     <style>
+        .button {
+            display: inline-block;
+            border-radius: 4px;
+            background-color: #f4511e;
+            border: none;
+            color: #FFFFFF;
+            text-align: center;
+            font-size: 28px;
+            padding: 20px;
+            width: 200px;
+            transition: all 0.5s;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .button span {
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+            transition: 0.5s;
+        }
+
+        .button span:after {
+            content: '\00bb';
+            position: absolute;
+            opacity: 0;
+            top: 0;
+            right: -20px;
+            transition: 0.5s;
+        }
+
+        .button:hover span {
+            padding-right: 25px;
+        }
+
+        .button:hover span:after {
+            opacity: 1;
+            right: 0;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
         canvas {
             background: #eee; display: block; margin: 0 auto;
         }
-    .clickme{
+        .clickme{
         height: 100px;
-    }
-    .myBtn{
+         }
+         .myBtn{
         width: 100px;
-    }
+         }
     </style>
 <script src="js/phaser.min.js"></script>
 </head>
@@ -21,11 +94,24 @@
 <canvas id="myCanvas" width="700" height="500"></canvas>
 <input id="clickMe" type="button" value="Start het spel" onclick="draw() ;" /><br>
 <br>
-<button id="myBtn">Handleiding</button>
+<button id="myBtn"> Handleiding </button>
+<br>
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Handleiding</h3>
+        <p>In het spel zijn er verschillende lagen van stenen boven aan het scherm. Een bal gaat heen en weer over het scherm. Wanneer de bal een steen raakt, verdwijnt de steen en kaatst de bal terug. De speler heeft een peddel die hij kan verplaatsen. Als de bal de peddel raakt, kaatst hij terug. Als de bal helemaal onder aan het scherm komt, voorbij de peddel, verliest de speler een leven. Het is dus de bedoeling dat de speler door de peddel te verplaatsen ervoor zorgt dat dit niet gebeurt.</p>
+    </div>
+</div>
+<div>
+    <h3>Jou higscrore is:</h3> <div id="highscoreboard"></div>
+</div>
+<div>
+<button onclick="localStorage.setItem('highscore',0);document.getElementById('highscoreboard').innerHTML = localStorage.getItem('highscore')">reset</button>
+    <!--<input type="button" id="clearlocal" onmouseover="myFunction()" onclick="alert('click event occured')">-->
+</div>
 <script>
-    document.getElementById("myBtn").addEventListener("click", function() {
-        alert("In het spel zijn er verschillende lagen van stenen boven aan het scherm. Een bal gaat heen en weer over het scherm. Wanneer de bal een steen raakt, verdwijnt de steen en kaatst de bal terug. De speler heeft een peddel die hij kan verplaatsen. Als de bal de peddel raakt, kaatst hij terug. Als de bal helemaal onder aan het scherm komt, voorbij de peddel, verliest de speler een leven. Het is dus de bedoeling dat de speler door de peddel te verplaatsen ervoor zorgt dat dit niet gebeurt.");
-    });
+    var highscore = localStorage.getItem("highscore");
     var mixBut = document.getElementById("mixBut");
     var canvas = document.getElementById("myCanvas");
     var ctx = canvas.getContext("2d");
@@ -50,7 +136,14 @@
     var bricks = [];
     var lives = 3;
     var record = 100;
-
+    if(highscore !== null){
+        if (score > highscore) {
+            localStorage.setItem("highscore", score);
+        }
+    }
+    else{
+        localStorage.setItem("highscore", score);
+    }
      for(var c=0; c<brickColumnCount; c++) {
         bricks[c] = [];
         for(var r=0; r<brickRowCount; r++) {
@@ -115,6 +208,7 @@
             }
         }
     }
+
     function drawBall() {
         ctx.beginPath();
         ctx.arc(x, y, ballRadius, 0, Math.PI*2);
@@ -122,6 +216,7 @@
         ctx.fill();
         ctx.closePath();
     }
+
     function drawPaddle() {
         ctx.beginPath();
         ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
@@ -147,11 +242,13 @@
             }
         }
     }
+
     function drawScore() {
         ctx.font = "19px Arial";
         ctx.fillStyle = "#8ddd76";
         ctx.fillText("Jou score: "+score, 8, 20);
     }
+
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawBricks();
@@ -173,7 +270,10 @@
             else {
                lives--;
                if (!lives){
-                    alert("GAME OVER")
+                    alert("GAME OVER");
+                   if (score > highscore) {
+                       localStorage.setItem("highscore", score);
+                   }
                    document.location.reload();
                }
                else {
@@ -242,40 +342,22 @@
                 setCookie('username',username,365);
             }
         }
+    var modal = document.getElementById('myModal');
+    var btn = document.getElementById("myBtn");
+    var span = document.getElementsByClassName("close")[0];
+    btn.onclick = function() {
+        modal.style.display = "block";
     }
-
-
-    function addToTextArea(text) {
-        var el = document.getElementById('myTextarea');
-        el.value = text;
+    span.onclick = function() {
+        modal.style.display = "none";
     }
-
-    function game() {
-        var guess = 0;
-        var numberOfGuesses = 0;
-        var rand_no = Math.random();
-        rand_no = Math.round(rand_no * 10);
-
-        guess = prompt("Insert your guess", "");
-        numberOfGuesses += 1;
-
-        while (guess != rand_no) {
-            if (guess > rand_no) {
-                guess = prompt("too big", "");
-            }
-            if (guess < rand_no) {
-                guess = prompt("too small", "");
-            }
-            numberOfGuesses += 1;
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
         }
-        if (numberOfGuesses < record) {
-            record = numberOfGuesses;
-        }
-
-        alert("It took you " + numberOfGuesses + " guesses");
-        addToTextArea("Your high score = " + (record));
-        setCookie('Score',record,365);
     }
+    //VOOR DE HIGSCORE
+    document.getElementById('highscoreboard').innerHTML = localStorage.getItem('highscore');
 </script>
 </body>
 </html>
