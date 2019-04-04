@@ -1,0 +1,345 @@
+<?php
+require "header.php";
+?>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Breakout</title>
+    <link rel="shortcut icon" href="img/header.jpg">
+    <style>
+
+        body {
+            margin: 0;
+        }
+        .button {
+            display: inline-block;
+            border-radius: 4px;
+            background-color: #f4511e;
+            border: none;
+            color: #FFFFFF;
+            text-align: center;
+            font-size: 28px;
+            padding: 20px;
+            width: 200px;
+            transition: all 0.5s;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .button span {
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+            transition: 0.5s;
+        }
+
+        .button span:after {
+            content: '\00bb';
+            position: absolute;
+            opacity: 0;
+            top: 0;
+            right: -20px;
+            transition: 0.5s;
+        }
+
+        .button:hover span {
+            padding-right: 25px;
+        }
+
+        .button:hover span:after {
+            opacity: 1;
+            right: 0;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        canvas {
+            background: #eee; display: block; margin: 0 auto;
+        }
+        .clickme{
+        height: 100px;
+         }
+         .myBtn{
+        width: 100px;
+         }
+    </style>
+<script src="js/phaser.min.js"></script>
+</head>
+<body>
+
+<button class="btnInit" onclick="localStorage.setItem('highscore',0);document.getElementById('highscoreboard').innerHTML = localStorage.getItem('highscore')">Reset score</button> <br/>
+<button class="btnInit" id="myBtn"> Handleiding </button> <br/>
+<input class="btnInit" id="clickMe" type="button" value="Start het spel" onclick="draw() ;" /><br/><br/>
+
+
+<canvas id="myCanvas" width="700" height="500"></canvas>
+
+<div>
+    <h3 style="text-align:center">Jouw highscore is:</h3> <div id="highscoreboard"></div>
+</div>
+
+<br>
+
+<br>
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Handleiding</h3>
+        <p>In het spel zijn er verschillende lagen van stenen boven aan het scherm. Een bal gaat heen en weer over het scherm. Wanneer de bal een steen raakt, verdwijnt de steen en kaatst de bal terug. De speler heeft een peddel die hij kan verplaatsen. Als de bal de peddel raakt, kaatst hij terug. Als de bal helemaal onder aan het scherm komt, voorbij de peddel, verliest de speler een leven. Het is dus de bedoeling dat de speler door de peddel te verplaatsen ervoor zorgt dat dit niet gebeurt.</p>
+    </div>
+</div>
+
+<div>
+
+    <!--<input type="button" id="clearlocal" onmouseover="myFunction()" onclick="alert('click event occured')">-->
+</div>
+<script>
+    var highscore = localStorage.getItem("highscore");
+    var mixBut = document.getElementById("mixBut");
+    var canvas = document.getElementById("myCanvas");
+    var ctx = canvas.getContext("2d");
+    var ballRadius = 8;
+    var x = canvas.width/2;
+    var y = canvas.height-30;
+    var dx = 3;
+    var dy = -3;
+    var paddleHeight = 7;
+    var paddleWidth = 85;
+    var paddleX = (canvas.width-paddleWidth)/2;
+    var rightPressed = false;
+    var leftPressed = false;
+    var brickRowCount = 6;
+    var brickColumnCount = 5;
+    var brickWidth = 60;
+    var brickHeight = 20;
+    var brickPadding = 1;
+    var brickOffsetTop = 65;
+    var brickOffsetLeft = 150;
+    var score = 0;
+    var bricks = [];
+    var lives = 3;
+
+    if(highscore !== null){
+        if (score > highscore) {
+            localStorage.setItem("highscore", score);
+        }
+    }
+    else{
+        localStorage.setItem("highscore", score);
+    }
+
+     for(var c=0; c<brickColumnCount; c++) {
+        bricks[c] = [];
+        for(var r=0; r<brickRowCount; r++) {
+            bricks[c][r] = { x: 0, y: 0, status: 1 };
+        }
+    }
+
+    document.addEventListener("keydown", keyDownHandler, false);
+    document.addEventListener("keyup", keyUpHandler, false);
+    document.addEventListener("mousemove", mouseMoveHandler, false);
+
+    function Start(){
+        console.log("Started");
+        mixBut.removeEventListener("click", Start);
+        mixBut.addEventListener("click", Stop);
+        mixBut.value = "Stop";
+    }
+
+    function Stop(){
+        console.log("Stopped");
+        mixBut.removeEventListener("click", Stop);
+        mixBut.addEventListener("click", Start);
+        mixBut.value = "Start";
+    }
+    function keyDownHandler(e) {
+        if(e.key == "Right" || e.key == "ArrowRight") {
+            rightPressed = true;
+        }
+        else if(e.key == "Left" || e.key == "ArrowLeft") {
+            leftPressed = true;
+        }
+    }
+    function keyUpHandler(e) {
+        if(e.key == "Right" || e.key == "ArrowRight") {
+            rightPressed = false;
+        }
+        else if(e.key == "Left" || e.key == "ArrowLeft") {
+            leftPressed = false;
+        }
+    }
+    function mouseMoveHandler(e) {
+        var relativeX = e.clientX - canvas.offsetLeft;
+        if(relativeX > 0 && relativeX < canvas.width) {
+            paddleX = relativeX - paddleWidth/2;
+        }
+    }
+    function collisionDetection() {
+        for(var c=0; c<brickColumnCount; c++) {
+            for(var r=0; r<brickRowCount; r++) {
+                var b = bricks[c][r];
+                if(b.status == 1) {
+                    if(x > b.x && x < b.x+brickWidth && y > b.y && y < b.y+brickHeight) {
+                        dy = -dy;
+                        b.status = 0;
+                        score++;
+                        if(score == brickRowCount*brickColumnCount) {
+                            alert("Je hebt gewonnen!");
+                            document.location.reload();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    function drawBall() {
+        ctx.beginPath();
+        ctx.arc(x, y, ballRadius, 0, Math.PI*2);
+        ctx.fillStyle = "#76C2AF";
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    function drawPaddle() {
+        ctx.beginPath();
+        ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
+        ctx.fillStyle = "#4F5D73";
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    function drawBricks() {
+        for(var c=0; c<brickColumnCount; c++) {
+            for(var r=0; r<brickRowCount; r++) {
+                if(bricks[c][r].status == 1) {
+                    var brickX = (r*(brickWidth+brickPadding))+brickOffsetLeft;
+                    var brickY = (c*(brickHeight+brickPadding))+brickOffsetTop;
+                    bricks[c][r].x = brickX;
+                    bricks[c][r].y = brickY;
+                    ctx.beginPath();
+                    ctx.rect(brickX, brickY, brickWidth, brickHeight);
+                    ctx.fillStyle = "#E0E0D1";
+                    ctx.fill();
+                    ctx.closePath();
+                }
+            }
+        }
+    }
+
+    function drawScore() {
+        ctx.font = "19px Arial";
+        ctx.fillStyle = "#8ddd76";
+        ctx.fillText("Jou score: "+score, 8, 20);
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawBricks();
+        drawBall();
+        drawPaddle();
+        collisionDetection();
+        drawScore();
+        drawlives();
+        if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
+            dx = -dx;
+        }
+        if(y + dy < ballRadius) {
+            dy = -dy;
+        }
+        else if(y + dy > canvas.height-ballRadius) {
+            if(x > paddleX && x < paddleX + paddleWidth) {
+                dy = -dy;
+            }
+            else {
+               lives--;
+               if (!lives){
+                    alert("GAME OVER");
+                   if (score > highscore) {
+                       localStorage.setItem("highscore", score);
+                   }
+                   document.location.reload();
+               }
+               else {
+                   x = canvas.width/2;
+                   y = canvas.height-30;
+                   dx = 3;
+                   dy = -3;
+                   paddleX = (canvas.Width-paddleWidth)/2;
+
+               }
+            }
+        }
+        if(rightPressed && paddleX < canvas.width-paddleWidth) {
+            paddleX += 5;
+        }
+        else if(leftPressed && paddleX > 3) {
+            paddleX -= 5;
+        }
+        x += dx;
+        y += dy;
+        requestAnimationFrame(draw);
+    }
+    function drawlives() {
+        ctx.font = "19px Arial";
+        ctx.fillStyle = "#76C2AF";
+        ctx.fillText("Jij hebt nog: "+lives +" levens!", canvas.width -195, 20 );
+
+    }
+    var modal = document.getElementById('myModal');
+    var btn = document.getElementById("myBtn");
+    var span = document.getElementsByClassName("close")[0];
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+    //VOOR DE HIGSCORE
+    document.getElementById('highscoreboard').innerHTML = localStorage.getItem('highscore');
+</script>
+
+<?php
+require "footer.php";
+?>
+</body>
+</html>
