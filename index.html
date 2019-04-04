@@ -91,7 +91,13 @@
 <script src="js/phaser.min.js"></script>
 </head>
 <body onload="checkCookie()">
-<canvas id="myCanvas" width="700" height="500"></canvas>
+<div>
+    <h3>Jou higscrore is:</h3> <div id="highscoreboard"></div>
+</div><br>
+<button onclick="localStorage.setItem('highscore',0);document.getElementById('highscoreboard').innerHTML = localStorage.getItem('highscore')">Reset de Highscore</button>
+
+
+<canvas id="myCanvas" width="800" height="500"></canvas>
 <input id="clickMe" type="button" value="Start het spel" onclick="draw() ;" /><br>
 <br>
 <button id="myBtn"> Handleiding </button>
@@ -103,11 +109,9 @@
         <p>In het spel zijn er verschillende lagen van stenen boven aan het scherm. Een bal gaat heen en weer over het scherm. Wanneer de bal een steen raakt, verdwijnt de steen en kaatst de bal terug. De speler heeft een peddel die hij kan verplaatsen. Als de bal de peddel raakt, kaatst hij terug. Als de bal helemaal onder aan het scherm komt, voorbij de peddel, verliest de speler een leven. Het is dus de bedoeling dat de speler door de peddel te verplaatsen ervoor zorgt dat dit niet gebeurt.</p>
     </div>
 </div>
+
 <div>
-    <h3>Jou higscrore is:</h3> <div id="highscoreboard"></div>
-</div>
-<div>
-<button onclick="localStorage.setItem('highscore',0);document.getElementById('highscoreboard').innerHTML = localStorage.getItem('highscore')">reset</button>
+
     <!--<input type="button" id="clearlocal" onmouseover="myFunction()" onclick="alert('click event occured')">-->
 </div>
 <script>
@@ -130,12 +134,14 @@
     var brickWidth = 60;
     var brickHeight = 20;
     var brickPadding = 1;
-    var brickOffsetTop = 65;
-    var brickOffsetLeft = 150;
+    var brickOffsetTop = 105;
+    var brickOffsetLeft = 220;
     var score = 0;
     var bricks = [];
     var lives = 3;
     var record = 100;
+
+
     if(highscore !== null){
         if (score > highscore) {
             localStorage.setItem("highscore", score);
@@ -326,38 +332,34 @@
         document.cookie=c_name+ "=" +escape(value)+((expiredays==null) ? "" : "; expires="+exdate.toUTCString());
     }
 
-    function checkCookie()
-    {
-        username=getCookie('username');
-        recordi=getCookie('Score');
-        if (username!=null && username!="")
-        {
-            alert(username+': '+recordi);
-        }
-        else
-        {
-            username=prompt('Please enter your name:',"");
-            if (username!=null && username!="")
-            {
-                setCookie('username',username,365);
+    function checkCookie() {
+        username = getCookie('username');
+        recordi = getCookie('Score');
+        if (username != null && username != "") {
+            alert(username + ': ' + recordi);
+        } else {
+            username = prompt('Please enter your name:', "");
+            if (username != null && username != "") {
+                setCookie('username', username, 365);
             }
         }
-    var modal = document.getElementById('myModal');
-    var btn = document.getElementById("myBtn");
-    var span = document.getElementsByClassName("close")[0];
-    btn.onclick = function() {
-        modal.style.display = "block";
-    }
-    span.onclick = function() {
-        modal.style.display = "none";
-    }
-    window.onclick = function(event) {
-        if (event.target == modal) {
+        var modal = document.getElementById('myModal');
+        var btn = document.getElementById("myBtn");
+        var span = document.getElementsByClassName("close")[0];
+        btn.onclick = function () {
+            modal.style.display = "block";
+        }
+        span.onclick = function () {
             modal.style.display = "none";
         }
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+        //VOOR DE HIGSCORE
+        document.getElementById('highscoreboard').innerHTML = localStorage.getItem('highscore');
     }
-    //VOOR DE HIGSCORE
-    document.getElementById('highscoreboard').innerHTML = localStorage.getItem('highscore');
 </script>
 </body>
 </html>
