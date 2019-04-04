@@ -37,6 +37,9 @@
         <div class="container-2">
             <img src="images/logo.png" alt="blije dobbelsteen" width="100" height="100">
         </div>
+        <div class="copyright">
+            copyright: Evegany, Stefan en Rowan.
+        </div>
     </div>
 </footer>
 </html>
